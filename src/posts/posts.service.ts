@@ -9,9 +9,10 @@ export class PostsService {
     private cloudinary: CloudinaryService,
   ) {}
 
-  async getRelatedPosts() {
+  async getRelatedPosts(limit?: number) {
     return this.prisma.relatedPost.findMany({
       orderBy: { createdAt: 'desc' },
+      ...(limit ? { take: limit } : {}),
     });
   }
 
