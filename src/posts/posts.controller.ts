@@ -7,6 +7,7 @@ import {
   BadRequestException,
   UploadedFile,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -19,9 +20,10 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get('posts/related')
-  async getRelatedPosts(@Query('limit') limit?: string) {
-    const parsedLimit = limit ? parseInt(limit, 10) : undefined;
-    return this.postsService.getRelatedPosts(parsedLimit);
+  async getRelatedPosts(
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+  ) {
+    return this.postsService.getRelatedPosts(limit);
   }
 
   @Post('post/related')
