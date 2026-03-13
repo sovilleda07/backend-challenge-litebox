@@ -16,6 +16,11 @@ async function bootstrap() {
     .setTitle('LiteTech API')
     .setDescription('LiteBox Technology Blog API')
     .setVersion('1.0')
+    .setContact(
+      'Sonia Villeda',
+      'https://sonia-villeda.vercel.app/',
+      'sovilelda07@email.com',
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, documentFactory);
