@@ -14,12 +14,31 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { extname } from 'path';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 @Controller('api')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get('posts/related')
+  @ApiOperation({ summary: 'Get related posts with optional limit' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Maximum number of posts to return. No limit brings all.',
+    example: 3,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of related posts returned successfully.',
+  })
   async getRelatedPosts(
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
@@ -27,6 +46,32 @@ export class PostsController {
   }
 
   @Post('post/related')
+  @ApiOperation({ summary: 'Create a related post' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['title', 'image'],
+      properties: {
+        title: {
+          type: 'string',
+          example: 'My technology post',
+          maxLength: 100,
+        },
+        image: {
+          type: 'string',
+          format: 'binary',
+          description:
+            'Image of the post (jpeg, jpg, png, gif, webp — max 5MB)',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Post created successfully' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid data or unauthorized image',
+  })
   @UseInterceptors(
     FileInterceptor('image', {
       storage: memoryStorage(),
