@@ -19,7 +19,7 @@ async function bootstrap() {
     .setContact(
       'Sonia Villeda',
       'https://sonia-villeda.vercel.app/',
-      'sovilelda07@email.com',
+      'sovilleda07@email.com',
     )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
