@@ -1,98 +1,150 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# LiteTech API - Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Lightweight REST API backend built with **NestJS**, **TypeScript**, and **Prisma** for the LiteBox Technology Blog. It provides endpoints for managing related posts and handling image uploads directly to **Cloudinary**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tech Stack
 
-## Description
+- **Framework:** [NestJS](https://nestjs.com/)
+- **Language:** TypeScript
+- **Database:** PostgreSQL (hosted on [Supabase](https://supabase.com/))
+- **ORM:** [Prisma](https://www.prisma.io/)
+- **Storage:** [Cloudinary](https://cloudinary.com/) (for image uploads via Multer)
+- **Documentation:** Swagger (OpenAPI)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- **Post Management:** Get and create related posts.
+- **Image Upload:** Upload post images seamlessly to Cloudinary.
+- **Validation:** Built-in validation for files (max 5MB, specific image formats like JPEG, PNG, WEBP) and DTOs using `class-validator`.
+- **API Documentation:** Auto-generated Swagger documentation.
 
-```bash
-$ npm install
+## Prerequisites
+
+- Node.js (v18+ recommended)
+- PostgreSQL database (e.g., Supabase)
+- Cloudinary account for storing images
+
+## Project Structure
+
+```text
+backend/
+├── prisma/
+│   └── schema.prisma            # Database schema and models
+├── src/
+│   ├── posts/
+│   │   ├── dto/                 # Data Transfer Objects
+│   │   ├── posts.controller.ts  # Route handlers for posts
+│   │   ├── posts.module.ts      # Posts feature module
+│   │   └── posts.service.ts     # Business logic
+│   ├── app.module.ts            # Main application module
+│   ├── cloudinary.service.ts    # Cloudinary integration
+│   ├── main.ts                  # Application entry point
+│   └── prisma.service.ts        # Prisma ORM setup
+├── test/                        # E2E Tests
+├── .env                         # Environment variables
+└── package.json
 ```
 
-## Compile and run the project
+## Environment Variables
 
-```bash
-# development
-$ npm run start
+Create a `.env` file in the root directory of the project and add the following variables:
 
-# watch mode
-$ npm run start:dev
+```env
+PORT=
+DATABASE_URL="postgresql://user:password@localhost:5432/your_db"
 
-# production mode
-$ npm run start:prod
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME="your_cloud_name"
+CLOUDINARY_API_KEY="your_api_key"
+CLOUDINARY_API_SECRET="your_api_secret"
 ```
 
-## Run tests
+## Getting Started
+
+1. **Clone the repository and install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Generate Prisma Client and push the schema to your database:**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   # Alternatively, if you use migrations: npx prisma migrate dev
+   ```
+
+3. **Start the application:**
+   ```bash
+   # development
+   npm run start
+   
+   # watch mode
+   npm run start:dev
+   
+   # production mode
+   npm run start:prod
+   ```
+
+## API Endpoints
+
+Once the application is running, you can access the Swagger API documentation at:
+**[http://localhost:3000/api/docs](http://localhost:3000/api/docs)** (or your configured port).
+
+### 1. Get Related Posts
+- **GET** `/api/posts/related`
+- **Query Parameters:** `limit` (Optional, number)
+- **Description:** Returns a list of related posts. No limit brings all posts.
+
+Example:
+```bash
+curl -X GET "http://localhost:3000/api/posts/related?limit=5"
+```
+
+Response:
+```json
+{
+   "id": 1,
+   "title": "Mi post",
+   "imageUrl": "https://res.cloudinary.com/...",
+   "createdAt": "2026-03-10T00:00:00.000Z"
+}
+```
+
+### 2. Create a Related Post
+- **POST** `/api/post/related`
+- **Content-Type:** `multipart/form-data`
+- **Body:**
+  - `title` (text, max 100 characters)
+  - `image` (file: jpeg, jpg, png, gif, webp — max 5MB)
+- **Description:** Creates a new post and uploads the provided image to Cloudinary.
+
+Example:
+```bash
+curl -X POST "http://localhost:3000/api/post/related" \
+  -H "Content-Type: multipart/form-data" \
+  -F "title=Mi post" \
+  -F "image=@/path/to/image.jpg"
+```
+
+Response:
+```json
+{
+  "id": 1,
+  "title": "Mi post",
+  "imageUrl": "https://res.cloudinary.com/tu_cloud/image/upload/v123/litebox/abc.jpg",
+  "createdAt": "2026-03-10T00:00:00.000Z"
+}
+```
+
+## Testing
 
 ```bash
 # unit tests
-$ npm run test
+npm run test
 
 # e2e tests
-$ npm run test:e2e
+npm run test:e2e
 
 # test coverage
-$ npm run test:cov
+npm run test:cov
 ```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
