@@ -87,6 +87,11 @@ CLOUDINARY_API_SECRET="your_api_secret"
 
 ## API Endpoints
 
+### Live Environment
+- **API URL:** [https://dev-sonia-daniela-villeda-guerra-backend.onrender.com](https://dev-sonia-daniela-villeda-guerra-backend.onrender.com)
+- **Swagger Documentation:** [https://dev-sonia-daniela-villeda-guerra-backend.onrender.com/api/docs](https://dev-sonia-daniela-villeda-guerra-backend.onrender.com/api/docs)
+
+### Local Environment
 Once the application is running, you can access the Swagger API documentation at:
 **[http://localhost:3000/api/docs](http://localhost:3000/api/docs)** (or your configured port).
 
