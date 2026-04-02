@@ -1,8 +1,8 @@
 {
   "name": "dev-sonia-daniela-villeda-guerra-backend",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "description": "Backend for the LiteBox technical challenge.",
+  "author": "Sonia Villeda",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -12,6 +12,9 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "postinstall": "prisma generate",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
